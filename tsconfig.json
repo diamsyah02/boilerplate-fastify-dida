@@ -3,7 +3,7 @@
     "target": "es2020",
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "rootDir": "./src",
+    "rootDir": "./",
     "outDir": "./dist",
     "esModuleInterop": true,
     "skipLibCheck": true,
