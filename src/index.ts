@@ -4,6 +4,7 @@ import Fastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import fastifyCompress from '@fastify/compress';
 import rootRoute from './routes/root.route.js';
 
 const app = Fastify({
@@ -15,6 +16,7 @@ await app.register(helmet);
 await app.register(cors, {
   origin: '*', // sesuaikan untuk production
 });
+app.register(fastifyCompress);
 await app.register(rateLimit, {
   global: true, // Rate limit berlaku global
   max: 200, // Maks 200 request per IP

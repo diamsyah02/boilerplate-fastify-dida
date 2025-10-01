@@ -11,6 +11,9 @@
     "types": ["node"],
     "verbatimModuleSyntax": true,
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true
   }
 }
