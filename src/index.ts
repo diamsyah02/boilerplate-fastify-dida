@@ -4,6 +4,7 @@ import Fastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import jwtPlugin from './plugins/jwt.plugin.ts';
 import fastifyCompress from '@fastify/compress';
 import rootRoute from './routes/root.route.js';
 import mailerPlugin from './plugins/mailer.plugin.ts';
@@ -39,6 +40,7 @@ await app.register(rateLimit, {
 
 // Register mailer plugin
 await app.register(mailerPlugin);
+await app.register(jwtPlugin);
 
 // Register routes
 await app.register(rootRoute, { prefix: '/api' });
