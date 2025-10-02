@@ -6,6 +6,7 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import fastifyCompress from '@fastify/compress';
 import rootRoute from './routes/root.route.js';
+import mailerPlugin from './plugins/mailer.plugin.ts';
 
 const app = Fastify({
   logger: true,
@@ -36,6 +37,8 @@ await app.register(rateLimit, {
   allowList: ['127.0.0.1'], // IP yang dibebaskan dari limit (misalnya internal)
 });
 
+// Register mailer plugin
+await app.register(mailerPlugin);
 
 // Register routes
 await app.register(rootRoute, { prefix: '/api' });
