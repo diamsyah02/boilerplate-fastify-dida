@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
-import type { AuthLogin, AuthRegister } from './auth.type.ts';
-import { loginRepository, registerRepository } from './auth.repository.ts';
-import { badRequest, created, success, WebResponse } from '@/utils/WebResponse.ts';
+import type { AuthLogin, AuthRegister } from './auth.type.js';
+import { loginRepository, registerRepository } from './auth.repository.js';
+import { badRequest, created, success, WebResponse } from '../../utils/WebResponse.js';
 
 const response = WebResponse;
 

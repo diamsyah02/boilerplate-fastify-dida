@@ -1,13 +1,15 @@
+import moduleAlias from 'module-alias';
+moduleAlias();
 import dotenv from 'dotenv';
 dotenv.config();
 import Fastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
-import jwtPlugin from './plugins/jwt.plugin.ts';
+import jwtPlugin from './plugins/jwt.plugin.js';
 import fastifyCompress from '@fastify/compress';
 import rootRoute from './routes/root.route.js';
-import mailerPlugin from './plugins/mailer.plugin.ts';
+import mailerPlugin from './plugins/mailer.plugin.js';
 
 const app = Fastify({
   logger: true,

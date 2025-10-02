@@ -1,6 +1,6 @@
 import { Queue } from 'bullmq';
 import { Redis } from 'ioredis';
-import type { EmailJobData } from './type.ts';
+import type { EmailJobData } from './type.js';
 
 const connection = new Redis();
 

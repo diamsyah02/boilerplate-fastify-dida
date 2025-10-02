@@ -1,8 +1,8 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { loginService, registerService } from "./auth.service.ts";
-import { authSchema, registerSchema } from "./auth.zod.ts";
-import { badRequest, created, success, WebResponse } from "@/utils/WebResponse.ts";
-import { mailQueue } from "@/jobs/mailer/queue.ts";
+import { loginService, registerService } from "./auth.service.js";
+import { authSchema, registerSchema } from "./auth.zod.js";
+import { badRequest, created, success, WebResponse } from "../../utils/WebResponse.js";
+import { mailQueue } from "../../jobs/mailer/queue.js";
 
 const response = WebResponse;
 

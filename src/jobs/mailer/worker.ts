@@ -1,7 +1,7 @@
 import { Worker } from 'bullmq';
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
-import type { EmailJobData } from './type.ts';
+import type { EmailJobData } from './type.js';
 
 dotenv.config();
 

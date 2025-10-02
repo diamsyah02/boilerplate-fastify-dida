@@ -8,7 +8,10 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/index.js",
-    "queue:mail": "ts-node src/jobs/workers/mailer.worker.ts"
+    "queue:mail": "ts-node --loader ts-node/esm src/jobs/workers/mailer.worker.ts"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   },
   "keywords": [],
   "author": "Dida Mustofa Diamsyah",
@@ -25,6 +28,7 @@
     "drizzle-orm": "^0.44.5",
     "fastify": "^5.6.1",
     "ioredis": "^5.8.0",
+    "module-alias": "^2.2.3",
     "mysql2": "^3.15.1",
     "nodemailer": "^7.0.6",
     "zod": "^4.1.11"
