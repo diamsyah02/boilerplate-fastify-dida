@@ -39,7 +39,7 @@ export const register = async (request: FastifyRequest, reply: FastifyReply) => 
 
     if (result.statusCode === created || result.statusCode === success) {
       await request.server.mailer.sendMail({
-        from: process.env.EMAIL_USER, // Jangan lupa `from`
+        from: process.env.EMAIL_USER,
         to: data.email,
         subject: 'Register Success',
         text: 'Your registration was successful. Welcome!',
