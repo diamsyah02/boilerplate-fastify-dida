@@ -1,10 +1,12 @@
 import fp from 'fastify-plugin';
 import jwt from '@fastify/jwt';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { WebResponse } from '../utils/WebResponse.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    authenticate: (request: any, reply: any) => Promise<void>;
+    jwt: jwt.JWT
+    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 }
 
@@ -18,7 +20,7 @@ export default fp(async function (fastify: FastifyInstance) {
         try {
             await request.jwtVerify();
         } catch (err) {
-            reply.send(err);
+            reply.send(WebResponse(401, 'Unauthorized', err, null));
         }
     });
 });

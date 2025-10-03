@@ -10,7 +10,7 @@ const rootRoute: FastifyPluginAsync = async (fastify: FastifyInstance) => {
     return { message: 'Ini adalah route yang dilindungi' };
   });
 
-  await fastify.register(authRoute, { prefix: '/api/auth' });
+  await fastify.register(authRoute, { prefix: '/auth' });
 };
 
 export default rootRoute;

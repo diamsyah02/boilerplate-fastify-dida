@@ -6,45 +6,54 @@ import { badRequest, created, success, WebResponse } from '../../utils/WebRespon
 const response = WebResponse;
 
 export const loginService = async (data: AuthLogin) => {
-  // Ambil user dari DB berdasarkan email
-  const user = await loginRepository(data); // misal return-nya: { id, email, passwordHash, ... }
+  try {
+    // Ambil user dari DB berdasarkan email
+    const user = await loginRepository(data); // misal return-nya: { id, email, passwordHash, ... }
 
-  if (!user) {
-    return response(badRequest, 'Login failed: user not found', null);
+    if (!user) {
+      return response(badRequest, 'Login failed: user not found', null, null);
+    }
+
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+
+    if (!isPasswordValid) {
+      return response(badRequest, 'Login failed: invalid password', null, null);
+    }
+    
+    const result = {
+      id: user.id,
+      email: user.email,
+    }
+
+    return response(success, 'Login success', null, result);
+  } catch (err) {
+    return response(badRequest, 'Login failed: invalid data', err, null);
   }
-
-  const isPasswordValid = await bcrypt.compare(data.password, user.password);
-
-  if (!isPasswordValid) {
-    return response(badRequest, 'Login failed: invalid password', null);
-  }
-  const result = {
-    id: user.id,
-    email: user.email,
-  }
-
-  return response(success, 'Login success', result);
 };
 
 export const registerService = async (data: AuthRegister) => {
-  // Hash password sebelum disimpan
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+  try {
+    // Hash password sebelum disimpan
+    const hashedPassword = await bcrypt.hash(data.password, 10);
 
-  const newUser = {
-    ...data,
-    password: hashedPassword,
-  };
+    const newUser = {
+      ...data,
+      password: hashedPassword,
+    };
 
-  const user = await registerRepository(newUser);
+    const user = await registerRepository(newUser);
 
-  if (!user) {
-    return response(badRequest, 'Register failed', null);
+    if (!user) {
+      return response(badRequest, 'Register failed', null, null);
+    }
+
+    const result = {
+      email: data.email,
+      phone: data.phone,
+    }
+
+    return response(created, 'Register success', null, result);
+  } catch (err) {
+    return response(badRequest, 'Register failed: invalid data', err, null);
   }
-
-  const result = {
-    email: data.email,
-    phone: data.phone,
-  }
-
-  return response(created, 'Register success', result);
 };

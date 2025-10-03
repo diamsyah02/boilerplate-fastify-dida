@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { loginService, registerService } from "./auth.service.js";
 import { authSchema, registerSchema } from "./auth.zod.js";
-import { badRequest, created, success, WebResponse } from "../../utils/WebResponse.js";
+import { badRequest, created, internalServerError, success, WebResponse } from "../../utils/WebResponse.js";
 import { mailQueue } from "../../jobs/mailer/queue.js";
 
 const response = WebResponse;
@@ -9,19 +9,20 @@ const response = WebResponse;
 export const login = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const data = authSchema.parse(request.body);
-    const result = await loginService(data);
-
-    if (result.statusCode === badRequest) {
-      await mailQueue.add('login-failed-email', {
-        to: data.email,
-        subject: 'Login Failed',
-        text: 'Your login failed. Please try again.',
-      });
+    let result = await loginService(data);
+    if (result.statusCode === success) {
+      const token = request.server.jwt.sign({ id: result.data?.id, email: result.data?.email });
+      result.data.token = token;
+      // await mailQueue.add('login-success-email', {
+      //   to: data.email,
+      //   subject: 'Login Success',
+      //   text: 'Your login was successful. Welcome!',
+      // });
     }
 
-    return reply.status(success).send(result);
+    return reply.status(result.statusCode).send(result);
   } catch (err) {
-    return reply.status(badRequest).send(response(badRequest, `Invalid data`, null));
+    return reply.status(internalServerError).send(response(internalServerError, `Invalid data`, err, null));
   }
 };
 
@@ -30,17 +31,17 @@ export const register = async (request: FastifyRequest, reply: FastifyReply) => 
     const data = registerSchema.parse(request.body);
     const result = await registerService(data);
 
-    if (result.statusCode === badRequest) {
+    if (result.statusCode === created || result.statusCode === success) {
       await request.server.mailer.sendMail({
         from: process.env.EMAIL_USER, // Jangan lupa `from`
         to: data.email,
-        subject: 'Register Failed',
-        text: 'Your registration failed. Please try again.',
+        subject: 'Register Success',
+        text: 'Your registration was successful. Welcome!',
       });
     }
 
-    return reply.status(created).send(result);
+    return reply.status(result.statusCode).send(result);
   } catch (err) {
-    return reply.status(badRequest).send(response(badRequest, `Invalid data`, null));
+    return reply.status(internalServerError).send(response(internalServerError, `Invalid data`, err, null));
   }
 };

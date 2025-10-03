@@ -6,10 +6,11 @@ export const notFound: number = 404
 export const unprocessableEntity: number = 422
 export const internalServerError: number = 500
 
-export const WebResponse = (statusCode: number, message: string, data: any) => {
+export const WebResponse = (statusCode: number, message: string, error: any, data: any) => {
     return {
         statusCode: statusCode,
         message: message,
+        error: error,
         data: data
     }
 }
