@@ -2,6 +2,7 @@ import { Worker } from 'bullmq';
 import { createTransport } from 'nodemailer';
 import dotenv from 'dotenv';
 import type { EmailJobData } from './type.js';
+import redisConnection from '../../configs/redis/index.js';
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ const transporter = createTransport({
   },
 });
 
-const worker = new Worker<EmailJobData>(
+export const worker = new Worker<EmailJobData>(
   'mail-queue',
   async job => {
     const { to, subject, text } = job.data;
@@ -28,10 +29,9 @@ const worker = new Worker<EmailJobData>(
     console.log(`📧 Email sent to ${to}`);
   },
   {
-    connection: {
-      host: '127.0.0.1',
-      port: 6379,
-    },
+    connection: redisConnection,
+    concurrency: 5,
+    autorun: true,
   }
 );
 

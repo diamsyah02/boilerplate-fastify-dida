@@ -13,6 +13,9 @@ declare module 'fastify' {
 export default fp(async function (fastify: FastifyInstance) {
     fastify.register(jwt, {
         secret: process.env.JWT_SECRET || 'supersecret',
+        sign: {
+            expiresIn: '1h',
+        },
     });
 
     // Optional: Tambah decorator auth

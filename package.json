@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "nodemon",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "queue:mail": "ts-node --loader ts-node/esm src/jobs/workers/mailer.worker.ts"
+    "start": "node dist/src/index.js",
+    "queue:mail": "ts-node --loader ts-node/esm src/worker.ts"
   },
   "_moduleAliases": {
     "@": "dist"

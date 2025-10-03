@@ -1,9 +1,7 @@
 import { Queue } from 'bullmq';
-import { Redis } from 'ioredis';
 import type { EmailJobData } from './type.js';
-
-const connection = new Redis();
+import redisConnection from '../../configs/redis/index.js';
 
 export const mailQueue = new Queue<EmailJobData>('mail-queue', {
-  connection,
+  connection: redisConnection,
 });

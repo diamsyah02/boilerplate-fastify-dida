@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { loginService, registerService } from "./auth.service.js";
 import { authSchema, registerSchema } from "./auth.zod.js";
-import { badRequest, created, internalServerError, success, WebResponse } from "../../utils/WebResponse.js";
+import { created, internalServerError, success, WebResponse } from "../../utils/WebResponse.js";
 import { mailQueue } from "../../jobs/mailer/queue.js";
 
 const response = WebResponse;
@@ -13,11 +13,17 @@ export const login = async (request: FastifyRequest, reply: FastifyReply) => {
     if (result.statusCode === success) {
       const token = request.server.jwt.sign({ id: result.data?.id, email: result.data?.email });
       result.data.token = token;
-      // await mailQueue.add('login-success-email', {
-      //   to: data.email,
-      //   subject: 'Login Success',
-      //   text: 'Your login was successful. Welcome!',
-      // });
+      await mailQueue.add('login-success-email', {
+        to: data.email,
+        subject: 'Login Success',
+        text: 'Your login was successful. Welcome!',
+      }, {
+        attempts: 2, // maksimal 2x retry
+        backoff: {
+          type: 'exponential',
+          delay: 5000, // delay 5 detik
+        }
+      });
     }
 
     return reply.status(result.statusCode).send(result);
